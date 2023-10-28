@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "event_handler"
+version = "0.6.0"
+description = "Example of a python project"
+readme = "README.md"
+
+authors = [{name = "Mattiusz"}]
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "click",
+    "fastapi",
+    "pydantic",
+    "pydantic-settings",
+    "python_dotenv",
+    "uvicorn",
+    "structlog",
+    "psycopg[binary]",
+    "psycopg_pool",
+    "aiosqlite"
+]
+
+[project.optional-dependencies]
+development = [
+  # Testing
+  "pytest",
+  "pytest-cov",
+  "pytest-asyncio",
+  "coverage[toml]",
+  "debugpy",
+  "pytest-postgresql",
+  # Code-Style
+  "pre-commit",
+  "black",
+  "isort",
+  "flake8",
+  "autoflake8",
+  "pyproject-flake8",
+  # Packaging
+  "commitizen",
+  "twine",
+  "wheel",
+  "pip-licenses"
+]
+
+[project.scripts]
+event_handler = "event_handler.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["event_handler*"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = true # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 120
+
+[tool.black]
+line-length = 120
+
+[tool.pyright]
+reportPrivateImportUsage = false
+
+[tool.coverage.run]
+omit = [
+    # omit this single file
+    "event_handler/logger.py",
+    "event_handler/cli.py",
+    "event_handler/main.py",
+    "event_handler/api/*"
+]
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_lines = [
+    '^if __name__ == "__main__"',
+    "^from.*import",
+    "^import",
+    "skip: coverage"
+]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_type = "pep440"
+version_provider = "pep621"
+version_files = [
+    "pyproject.toml",
+    "sonar-project.properties:sonar.projectVersion"
+]
+update_changelog_on_bump = true
+major_version_zero = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
